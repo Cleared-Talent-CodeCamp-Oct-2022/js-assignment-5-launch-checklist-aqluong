@@ -3,18 +3,17 @@ require('isomorphic-fetch');
 
 function addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl) {
    // Here is the HTML formatting for our mission target div.
-   let div = document.getElementByID("missionTarget");
-   div.innerHTML = `
-   
-                <h2>Mission Destination</h2>
-                <ol>
-                    <li>Name: </li>
-                    <li>Diameter: </li>
-                    <li>Star: ${star}</li>
-                    <li>Distance from Earth: </li>
-                    <li>Number of Moons: </li>
-                </ol>
-                <img src="">
+   let missionTarget = document.getElementByID("missionTarget");
+   missionTarget.innerHTML = `
+   <h2>Mission Destination</h2>
+   <ol>
+       <li>Name: ${name}</li>
+       <li>Diameter: ${diameter} </li>
+       <li>Star: ${star}</li>
+       <li>Distance from Earth: ${distance}</li>
+       <li>Number of Moons: ${moons}</li>
+   </ol>
+   <img src='${imageUrl}'>
    `
 }
 
@@ -22,7 +21,7 @@ function validateInput(testInput) {
     if (testInput === ""){
         return "Empty";
     }
-        else if (isNaN(testInput)){
+        else if (isNaN(Number(testInput))){
             return "Not a Number";
         }
         else{
@@ -37,12 +36,13 @@ function validateInput(testInput) {
 //    isNaN("1000") ---> false
 }
 
-function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
-    let pilotStatus = document.getElementByID("pilotStatus");
-    let copilotStatus = document.getElementByID("copilotStatus");
-    let launchStatus = document.getElementByID("launchStatus");
-    let fuelStatus = document.getElementByID("fuelStatus");
-    let cargoStatus = document.getElementByID("cargoStatus");
+function formSubmission (document, list, pilot, copilot, fuelLevel, cargoLevel) {
+    //DOM elements
+    let pilotStatus = document.getElementById('pilotStatus');
+    let copilotStatus = document.getElementById('copilotStatus');
+    let fuelStatus = document.getElementById('fuelStatus');
+    let launchStatus = document.getElementById('launchStatus');
+    let cargoStatus = document.getElementById('cargoStatus');
     // So given that we have called the formSubmission function in script.js, let's assess what
     // we now would have access to in this function based on what we passed in
     // First we passed in the global docuemtn object, so we can now do things like document.getElementByid
@@ -58,37 +58,38 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
 
     // For writing this if statement, think about it like this.
     // If pilot is empty OR if copilot is empty OR if fuelLevel is empty, or if cargoLevel is empty
-    if (validateInput(pilot) === "Empty" || validateInput(copilot) === "Empty" || validateInput(fuelLevel) ==="Empty" || validateInput(cargoLevel) === "Empty"){
-        alert("All fields required");
+    if (validateInput(pilot) === 'Empty' || validateInput(copilot) === 'Empty' || validateInput(fuelLevel) === 'Empty' || validateInput(cargoLevel) === 'Empty'){
+        alert('All fields required');
     }
-        else if (validateInput(pilot) === "Is a Number" || validateInput(copilot) === "Is a Number"){
-            alert("Pilot and Co-Pilot fields must be words!");
+        else if (validateInput(fuelLevel) === 'Not a Number' || validateInput(cargoLevel) === 'Not a Number'){
+        alert('Fuel Level and Cargo Level fields must be a Number!');
         }
-        else if (validateInput(fuelLevel) === "Not a Number" || validateInput(cargoLevel) === "Not a Number"){
-            alert("Fuel Level and Cargo Level fields must be a Number!");
+        else if (validateInput(pilot) === 'Is a Number' || validateInput(copilot) === 'Is a Number'){
+            alert('Pilot and Co-Pilot fields must be words!');
         }
         else{
             pilotStatus.innerHTML = `Pilot ${pilot} is ready`;
-            copilotStatus.innerHTML = `CoPilot ${copilot} is ready`;
+            copilotStatus.innerHTML = `Co-Pilot ${copilot} is ready`;
+            list.style.visibility = 'hidden';
         }
-        if (fuelLevel < 10000){
-            list.style.visibility = "visible";
-            fuelStatus.innerHTML = "Not enough fuel for journey 🔻🪫"
-            launchStatus.innerHTML = "Shuttle not ready for launch";
-            launchStatus.style.color = "red";
+        if (Number(fuelLevel) < 10000){
+            list.style.visibility = 'visible';
+            fuelStatus.innerHTML = 'Not enough fuel for journey 🔻🪫';
+            launchStatus.innerHTML = 'Shuttle not ready for launch';
+            launchStatus.style.color = 'red';
         }
-        if(cargoLevel > 10000){
-            list.style.visibility = "visible";
-            fuelStatus.innerHTML = "Too much mass. Please lighten Cargo ";
-            launchStatus.innerHTML = "Shuttle not ready for launch"
-            launchStatus.style.color = "red";
+        if(Number(cargoLevel) > 10000){
+            list.style.visibility = 'visible';
+            fuelStatus.innerHTML = 'Too much mass. Please lighten Cargo ';
+            launchStatus.innerHTML = 'Shuttle not ready for launch';
+            launchStatus.style.color = 'red';
         }
-        if (fuelLevel > 10000 && cargoLevel < 10000){
-            list.style.visibility = "visible";
-            launchStatus.innerHTML = "Shuttle ready for Launch!!! 🚀🚀🚀 "
-            launchStatus.style.color = "green";
-            fuelLevel.innerHTML = "Fuel level good for Launch!";
-            cargoLevel.innerHTML = "Cargo mass good for Launch";
+        if (Number(fuelLevel) > 10000 && cargoLevel < 10000){
+            list.style.visibility = 'visible';
+            launchStatus.innerHTML = 'Shuttle ready for Launch!!! 🚀🚀🚀 ';
+            launchStatus.style.color = 'green';
+            fuelLevel.innerHTML = 'Fuel level good for Launch!';
+            cargoLevel.innerHTML = 'Cargo mass good for Launch';
         }
     // Else if none of the input values are empty, then we need to make sure that they are the correct type.
     // validateInput(pilot) returns "Is a Number", then the user has provided incorrect data. That means we need to send in an ALERT
@@ -105,13 +106,16 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
 async function myFetch() {
     let planetsReturned;
 
-    planetsReturned = await fetch().then( function(response) {
+    planetsReturned = await fetch("https://handlers.education.launchcode.org/static/planets.json").then( function(response) {
+        return response.json()
         });
 
     return planetsReturned;
 }
 
 function pickPlanet(planets) {
+    let planetIndex = Math.floor(Math.random() * planets.length);
+    return planets[planetIndex];
 }
 
 module.exports.addDestinationInfo = addDestinationInfo;
