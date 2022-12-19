@@ -13,7 +13,8 @@ window.addEventListener("load", function() {
     const form = document.querySelector("form");
     form.addEventListener("submit", (event)=>{
         event.preventDefault();
-
+// querySelector and querySelectorAll examples: let element = document.querySelector("CSS selector");
+//  https://education.launchcode.org/intro-to-professional-web-dev/appendices/dom-method-examples/queryselector-examples.html
         let pilot = document.querySelector("input[name=pilotName]").value;
         let copilot = document.querySelector("input[name=copilotName]").value;
         let fuelLevel = document.querySelector("input[name=fuelLevel]").value;
@@ -22,11 +23,11 @@ window.addEventListener("load", function() {
 
 
             formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel);
-        });
-
+        })
+// Fetching Planetary Data in the script.js side
    let listedPlanets;
    // Set listedPlanetsResponse equal to the value returned by calling myFetch()
-   let listedPlanetsResponse = myFetch();
+   let listedPlanetsResponse = myFetch(); // listedPlanetsResponse - to myFetch() is the promise
    listedPlanetsResponse.then(function (result) {
        listedPlanets = result;
        console.log(listedPlanets);
@@ -54,14 +55,16 @@ window.addEventListener("load", function() {
         // let copilotInput = document.getElementById("copilotName")
 
 // varible names could change if you want your choice)
-            let planet = pickPlanet(listedPlanets);
-            let name = planet.name;
-            let diameter = planet.diameter;
-            let star = planet.star;
-            let distance = planet.distance;
-            let imageUrl = planet.image;
-            let moons = planet.moons;
-            addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl);
+// Below is calling the appropriate helper functions to pick a planet from the list of planets and add that infomation to your destination.
+// Need to pick at random see scriptHelper.js bottom of page for rest
+let planet = pickPlanet(listedPlanets);
+let name = planet.name;
+let diameter = planet.diameter;
+let star = planet.star;
+let distance = planet.distance;
+let imageUrl = planet.image;
+let moons = planet.moons;
+addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl);
 
              
 
