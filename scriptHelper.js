@@ -101,7 +101,7 @@ function formSubmission (document, list, pilot, copilot, fuelLevel, cargoLevel) 
         // launchStatus is color green and says "Shuttle is ready for launch"
         else if (Number(fuelLevel) > 10000 && (Number(cargoLevel)) < 10000){
             list.style.visibility = 'visible';
-            launchStatus.innerHTML = '🚀🚀🚀 Shuttle ready for Launch!!! 🚀🚀🚀 ';
+            launchStatus.innerHTML = '🚀💥🚀💥🚀 Shuttle ready for Launch!!! 🚀💥🚀💥🚀 ';
             launchStatus.style.color = 'green';
             fuelStatus.innerHTML = 'Fuel level good for Launch! 🔋';
             cargoStatus.innerHTML = 'Cargo mass good for Launch 💯';
